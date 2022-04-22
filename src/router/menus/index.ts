@@ -63,7 +63,6 @@ async function getAsyncMenus() {
 }
 
 export const getMenus = async (): Promise<Menu[]> => {
-  console.log('hhhhhhh');
   const menus = await getAsyncMenus();
   if (isRoleMode()) {
     const routes = router.getRoutes();
@@ -73,7 +72,6 @@ export const getMenus = async (): Promise<Menu[]> => {
 };
 
 export async function getCurrentParentPath(currentPath: string) {
-  console.log('hhhhhhh1');
   const menus = await getAsyncMenus();
   const allParentPath = await getAllParentPath(menus, currentPath);
   return allParentPath?.[0];
@@ -81,7 +79,6 @@ export async function getCurrentParentPath(currentPath: string) {
 
 // Get the level 1 menu, delete children
 export async function getShallowMenus(): Promise<Menu[]> {
-  console.log('hhhhhhh2');
   const menus = await getAsyncMenus();
   const shallowMenuList = menus.map((item) => ({ ...item, children: undefined }));
   if (isRoleMode()) {

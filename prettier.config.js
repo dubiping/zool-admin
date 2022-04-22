@@ -4,7 +4,7 @@ module.exports = {
   vueIndentScriptAndStyle: true,
   singleQuote: true,
   trailingComma: 'all',
-  proseWrap: 'never',
+  proseWrap: 'always',
   htmlWhitespaceSensitivity: 'strict',
   endOfLine: 'auto',
 };

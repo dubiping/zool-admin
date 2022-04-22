@@ -1,5 +1,5 @@
 <!--
- * @Author: Vben
+ * @Author: Zool
  * @Description: logo component
 -->
 <template>

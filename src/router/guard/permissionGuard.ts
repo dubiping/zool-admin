@@ -79,7 +79,6 @@ export function createPermissionGuard(router: Router) {
       next(userStore.getUserInfo.homePath || PageEnum.BASE_HOME);
       return;
     }
-    console.log('---', userStore.getLastUpdateTime);
     // get userinfo while last fetch time is empty
     if (userStore.getLastUpdateTime === 0) {
       try {
