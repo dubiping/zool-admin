@@ -1,5 +1,5 @@
 import { MockMethod } from 'vite-plugin-mock';
-import { resultSuccess } from '../_util';
+import { resultSuccess, formatDate } from '../_util';
 import { Random } from 'mockjs';
 
 const emojiList = ['[微笑]', '[撇嘴]', '[色]', '[发呆]', '[得意]', '[流泪]', '[害羞]'];
@@ -36,6 +36,10 @@ const msgTypeList = [
   {
     mediaCode: '2020',
     mediaName: 'wxGzh',
+  },
+  {
+    mediaCode: '2021',
+    mediaName: 'businessCard',
   },
 ];
 
@@ -82,6 +86,7 @@ const getTextContent = () => {
   }
   return str;
 };
+const timeMul = [24 * 60 * 60, 60 * 60, 60, 1];
 const demoList = (count = 20) => {
   const len = msgTypeList.length;
   const result: any[] = [];
@@ -89,6 +94,7 @@ const demoList = (count = 20) => {
   const otherAvatar = Random.image('400x400', Random.color(), Random.color(), Random.first());
   const selfName = Random.cname();
   const otherName = Random.cname();
+  const nowTime = Date.now();
   for (let index = 0; index < count; index++) {
     const index = Random.natural(0, len - 1);
     const typeItem = msgTypeList[index];
@@ -140,14 +146,19 @@ const demoList = (count = 20) => {
     } else if (typeItem.mediaName == 'wxGzh') {
       item.title = Random.ctitle();
       item.imageUrl = Random.image('400x400', Random.color(), Random.color(), Random.first());
+    } else if (typeItem.mediaName == 'businessCard') {
+      item.title = Random.ctitle();
+      item.imageUrl = Random.image('400x400', Random.color(), Random.color(), Random.first());
     }
     const position = Random.natural(1, 2);
+    const timeIndex = Random.natural(0, 3);
+    const random = Random.natural(0, 10);
     result.push({
       id: '@id',
       position: '' + position,
       avatar: position == 1 ? selfAvatar : otherAvatar,
       nickName: position == 1 ? selfName : otherName,
-      time: '@datetime',
+      time: formatDate(nowTime - timeMul[timeIndex] * random),
       ...item,
       ...typeItem,
     });

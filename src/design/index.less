@@ -43,3 +43,28 @@ svg,
 span {
   outline: none !important;
 }
+
+.generate-ellipse(@n, @i: 1) when (@i =< @n) {
+  .ellipse-@{i} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: box;
+    -webkit-line-clamp: @i;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+  }
+  .generate-ellipse(@n, (@i + 1));
+}
+.generate-ellipse(4);
+
+.generate-font(@n, @i: 12) when (@i =< @n) {
+  .fs-@{i} {
+    font-size: (@i) + 0 !important;
+  }
+  .generate-font(@n, (@i + 1));
+}
+.generate-font(30);
+
+.color-light-gray {
+  color: #999;
+}

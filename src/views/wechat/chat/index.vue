@@ -18,6 +18,34 @@
                 <template v-if="item.mediaName === 'text'">
                   <EmojiWord :content="item.content" />
                 </template>
+                <template v-else-if="item.mediaName === 'pic'">
+                  <ImageBox
+                    :imageUrl="item.imageUrl"
+                    :previewList="previewImageList"
+                    class="pic-item"
+                  />
+                </template>
+                <template v-else-if="item.mediaName === 'video'">
+                  <VideoBox :mediaData="item" />
+                </template>
+                <template v-else-if="item.mediaName === 'voice'">
+                  <VoiceBox :mediaData="item" :isSelf="item.position == 1" />
+                </template>
+                <template v-else-if="item.mediaName === 'link'">
+                  <LinkBox :mediaData="item" />
+                </template>
+                <template v-else-if="item.mediaName === 'file'">
+                  <FileBox :mediaData="item" />
+                </template>
+                <template v-else-if="item.mediaName === 'miniApp'">
+                  <MiniApp :mediaData="item" />
+                </template>
+                <template v-else-if="item.mediaName === 'wxGzh'">
+                  <WxGzhBox :mediaData="item" />
+                </template>
+                <template v-else-if="item.mediaName === 'businessCard'">
+                  <BusinessCard :mediaData="item" />
+                </template>
               </div>
             </div>
           </div>
@@ -34,8 +62,17 @@
   import { ScrollContainer, ScrollActionType } from '/@/components/Container/index';
   import { getChatListApi } from '/@/api/wechat/index';
   import EmojiWord from '../components/EmojiWord/index.vue';
+  import ImageBox from '../components/ImageBox/index.vue';
+  import VideoBox from '../components/VideoBox/index.vue';
+  import VoiceBox from '../components/VoiceBox/index.vue';
+  import LinkBox from '../components/LinkBox/index.vue';
+  import FileBox from '../components/FileBox/index.vue';
+  import MiniApp from '../components/MiniApp/index.vue';
+  import WxGzhBox from '../components/WxGzhBox/index.vue';
+  import BusinessCard from '../components/BusinessCard/index.vue';
 
   const chatList = ref([]);
+  const previewImageList = ref([]);
 
   const scrollRef = ref<Nullable<ScrollActionType>>(null);
   const getScroll = () => {
@@ -53,9 +90,17 @@
   const getPageInfo = async () => {
     const res = await getChatListApi();
     chatList.value = res;
+    previewImageList.value = res.reduce((list, item) => {
+      if (item.mediaName == 'pic') {
+        list.unshift(item.imageUrl);
+      }
+      return list;
+    }, []);
+    setTimeout(() => {
+      scrollBottom();
+    }, 2000);
   };
   onMounted(() => {
-    scrollBottom();
     getPageInfo();
   });
 </script>
@@ -161,21 +206,17 @@
 
       .item-content {
         position: relative;
-        max-width: 170px;
+        max-width: 400px;
 
         &::after {
           content: ' ';
           border-width: 4px;
           position: absolute;
-          // top: 15px;
-          // left: -4px;
           display: block;
           width: 0;
           height: 0;
           border-color: transparent;
           border-style: solid;
-          // border-right-color: #fff;
-          // border-left-width: 0;
         }
       }
 
@@ -190,9 +231,6 @@
       .item-content_text,
       .item-content_voice {
         box-sizing: border-box;
-        // &::after {
-        //   border-right-color: $base-color-green;
-        // }
       }
 
       .item-content_voice {
@@ -202,47 +240,9 @@
       }
 
       .item-content_pic {
-        max-width: 160px;
-      }
-
-      .item-content_link,
-      .item-content_file {
-        height: 62px;
-        overflow: hidden;
-
-        .linkBox-container,
-        .fileBox-container {
-          transform: scale(0.75);
-          transform-origin: 0 0;
-        }
-      }
-
-      .item-content_file {
-        height: 49px;
-      }
-
-      .item-content_miniApp {
-        height: 196px;
-        overflow: hidden;
-
-        ::v-deep {
-          .mini-container {
-            background: #fff;
-            transform: scale(0.75);
-            transform-origin: 0 0;
-          }
-        }
-      }
-
-      .item-content_wxGzh {
-        height: 78px;
-        overflow: hidden;
-
-        ::v-deep {
-          .wxGzh-container {
-            transform: scale(0.75);
-            transform-origin: 0 0;
-          }
+        ::v-deep(.ant-image-img) {
+          max-width: 240px;
+          max-height: 240px;
         }
       }
     }
