@@ -1,25 +1,6 @@
 import emojiData from '../data/emoji';
+import { EmojiItem, EmojiIndexItem, ContentItem } from '../types';
 
-interface EmojiItem {
-  id: number;
-  cn: string;
-  hk: string;
-  us: string;
-  code: string;
-  web_code: string;
-  style: string;
-}
-interface EmojiIndexItem {
-  idx: number;
-  code: string;
-  type: number;
-  value?: string;
-}
-interface ContentItem {
-  type: number;
-  content: string;
-  imageClass?: string;
-}
 const emotionMap: Record<string, EmojiItem> = {};
 
 emojiData.forEach((item) => {

@@ -87,7 +87,7 @@ const getTextContent = () => {
   return str;
 };
 const timeMul = [24 * 60 * 60, 60 * 60, 60, 1];
-const demoList = (count = 20) => {
+const demoList = (count = 10) => {
   const len = msgTypeList.length;
   const result: any[] = [];
   const selfAvatar = Random.image('400x400', Random.color(), Random.color(), Random.first());

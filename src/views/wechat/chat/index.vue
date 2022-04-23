@@ -1,6 +1,6 @@
 <template>
   <Layout class="container">
-    <LayoutHeader class="!px-4 border-b header">122</LayoutHeader>
+    <LayoutHeader class="!px-4 border-b header">{{ chatTitle }}</LayoutHeader>
     <LayoutContent class="relative main">
       <ScrollContainer class="!absolute left-0 top-0" ref="scrollRef">
         <div v-for="item in chatList" :key="item.id" class="chat-item">
@@ -19,11 +19,7 @@
                   <EmojiWord :content="item.content" />
                 </template>
                 <template v-else-if="item.mediaName === 'pic'">
-                  <ImageBox
-                    :imageUrl="item.imageUrl"
-                    :previewList="previewImageList"
-                    class="pic-item"
-                  />
+                  <ImageBox :mediaData="item" :previewList="previewImageList" class="pic-item" />
                 </template>
                 <template v-else-if="item.mediaName === 'video'">
                   <VideoBox :mediaData="item" />
@@ -52,7 +48,9 @@
         </div>
       </ScrollContainer>
     </LayoutContent>
-    <LayoutFooter class="border-t footer !px-4">33</LayoutFooter>
+    <LayoutFooter class="border-t footer !px-4">
+      <ChatEditor />
+    </LayoutFooter>
   </Layout>
 </template>
 
@@ -70,9 +68,13 @@
   import MiniApp from '../components/MiniApp/index.vue';
   import WxGzhBox from '../components/WxGzhBox/index.vue';
   import BusinessCard from '../components/BusinessCard/index.vue';
+  import ChatEditor from '../components/ChatEditor/index.vue';
+
+  import { PreviewItem } from './types';
 
   const chatList = ref([]);
-  const previewImageList = ref([]);
+  const previewImageList = ref<PreviewItem[]>([]);
+  const chatTitle = ref('');
 
   const scrollRef = ref<Nullable<ScrollActionType>>(null);
   const getScroll = () => {
@@ -89,13 +91,30 @@
 
   const getPageInfo = async () => {
     const res = await getChatListApi();
-    chatList.value = res;
-    previewImageList.value = res.reduce((list, item) => {
-      if (item.mediaName == 'pic') {
-        list.unshift(item.imageUrl);
+    let prevTime = 0;
+    const maxDiffTime = 5 * 3600 * 1000;
+    const imgList: PreviewItem[] = [];
+    let nickName = '';
+    res.forEach((v) => {
+      let curTime = new Date(v.time).getTime();
+      if (curTime - prevTime > maxDiffTime) {
+        prevTime = curTime;
+      } else {
+        v.time = 0;
       }
-      return list;
-    }, []);
+      if (v.mediaName == 'pic') {
+        imgList.unshift({
+          id: v.id,
+          imageUrl: v.imageUrl,
+        });
+      }
+      if (v.position != '1') {
+        nickName = v.nickName;
+      }
+    });
+    chatList.value = res;
+    previewImageList.value = imgList;
+    chatTitle.value = nickName;
     setTimeout(() => {
       scrollBottom();
     }, 2000);
@@ -115,9 +134,17 @@
 
   .header {
     background: transparent;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .footer {
+    height: 300px;
   }
 
   .chat-item {
+    padding-bottom: 20px;
+
     .time {
       text-align: center;
       margin: 10px;
@@ -243,6 +270,14 @@
         ::v-deep(.ant-image-img) {
           max-width: 240px;
           max-height: 240px;
+        }
+      }
+
+      .item-content_pic,
+      .item-content_video {
+        &::after {
+          display: none;
+          border-width: 0;
         }
       }
     }
