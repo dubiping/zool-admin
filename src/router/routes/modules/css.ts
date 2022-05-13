@@ -32,6 +32,14 @@ const cssModule: AppRouteModule = {
             title: t('routes.css.diaochan'),
           },
         },
+        {
+          path: 'lubu',
+          name: 'Lubu',
+          component: () => import('/@/views/css/backCity/lubu/index.vue'),
+          meta: {
+            title: t('routes.css.lubu'),
+          },
+        },
       ],
     }
   ],

@@ -1,5 +1,6 @@
 export default {
   css: 'CSS',
   backCity: '回城',
-  diaochan: '貂蝉'
+  diaochan: '貂蝉',
+  lubu: '吕布'
 }

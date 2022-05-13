@@ -1,24 +1,24 @@
 <template>
   <div ref="nodeRef" class="ani-container">
     <div class="game-wrap">
-    <!-- 旋转光圈 -->
-    <div class="light-wrap one">
-      <div class="light-item one"></div>
-    </div>
-    <div class="light-wrap two">
-      <div class="light-item two"></div>
-    </div>
-    
-    <div class="bottom-content">
-    </div>
-    <img class="user" src="/@/assets/images/css/backCity/diaochan.png" alt=""/>
-    <!-- 回城底部圆形波 -->
-    <div class="bottom-wrap">
-      <div class="bottom-item">
+      <!-- 旋转光圈 -->
+      <div class="light-wrap one">
+        <div class="light-item one"></div>
       </div>
-      <div class="bottom-item copy"></div>
+      <div class="light-wrap two">
+        <div class="light-item two"></div>
+      </div>
+      
+      <div class="bottom-content">
+      </div>
+      <img class="user" src="/@/assets/images/css/backCity/diaochan.png" alt=""/>
+      <!-- 回城底部圆形波 -->
+      <div class="bottom-wrap">
+        <div class="bottom-item">
+        </div>
+        <div class="bottom-item copy"></div>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 <script lang="ts" setup>
