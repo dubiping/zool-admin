@@ -2,7 +2,8 @@ import type { RouteLocationNormalized, RouteRecordNormalized } from 'vue-router'
 import type { App, Plugin } from 'vue';
 
 import { unref } from 'vue';
-import { isObject } from '/@/utils/is';
+import { isObject, isFunction } from '/@/utils/is';
+import { cloneDeep } from 'lodash-es';
 
 export const noop = () => {};
 
@@ -89,3 +90,80 @@ export const withInstall = <T>(component: T, alias?: string) => {
   };
   return component as T & Plugin;
 };
+
+/**
+ * Array translate tree
+ * @param {Array} data
+ * @param {string} id 节点自身id字段
+ * @param {string} parentId 关联父节点id字段
+ * @param {function} fn
+ * @returns
+ */
+export function translateArrToTree(data, id = 'id', parentId = 'parentId', fn?: Function) {
+  const result: any = [];
+  const map: any = {};
+  if (!Array.isArray(data)) {
+    return [];
+  }
+  data.forEach((item) => {
+    map[item[id]] = item;
+  });
+  data.forEach((item) => {
+    const parent = map[item[parentId]];
+    if (parent) {
+      (parent.children || (parent.children = [])).push(isFunction(fn) ? fn(item) : item);
+    } else {
+      result.push(isFunction(fn) ? fn(item) : item);
+    }
+  });
+  return result;
+}
+
+/**
+ * tree translate Array
+ * @param {Object} node
+ * @returns
+ */
+export function translateTreeToArr(node, fn?: Function) {
+  const cloneNode = cloneDeep(node);
+  const queue = Array.isArray(cloneNode) ? [...cloneNode] : [cloneNode];
+  const data: any = [];
+  while (queue.length !== 0) {
+    const item = queue.shift();
+    const children = item.children;
+    delete item.children;
+    data.push({ ...(isFunction(fn) ? fn(item) : item) });
+    if (children) {
+      for (let i = 0; i < children.length; i++) {
+        queue.push(children[i]);
+      }
+    }
+  }
+  return data;
+}
+
+export function translateTreeData(data: any[], fn?: Function) {
+  data.forEach((v) => {
+    isFunction(fn) && fn(v);
+    if (v.children && v.children.length) {
+      translateTreeData(v.children, fn);
+    }
+  });
+  return data;
+}
+
+export function translateTreeMap(node, id = 'id') {
+  const map: any = {};
+  const queue = Array.isArray(node) ? [...node] : [node];
+  while (queue.length !== 0) {
+    const item = queue.shift();
+    const children = item.children;
+    map[item[id]] = item;
+    if (children) {
+      for (let i = 0; i < children.length; i++) {
+        queue.push(children[i]);
+      }
+    }
+  }
+  return map;
+}

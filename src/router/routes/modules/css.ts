@@ -41,7 +41,58 @@ const cssModule: AppRouteModule = {
           },
         },
       ],
-    }
+    },
+    {
+      path: 'wordcloud',
+      name: 'Wordcloud',
+      redirect: '/css/wordcloud/ani1',
+      component: getParentLayout('Wordcloud'),
+      meta: {
+        title: t('routes.css.wordcloud'),
+      },
+      children: [
+        {
+          path: 'ani1',
+          name: 'Ani1',
+          component: () => import('/@/views/css/wordcloud/ani1/index.vue'),
+          meta: {
+            title: t('routes.css.ani1'),
+          },
+        },
+        {
+          path: 'ani2',
+          name: 'Ani2',
+          component: () => import('/@/views/css/wordcloud/ani2/index.vue'),
+          meta: {
+            title: t('routes.css.ani2'),
+          },
+        },
+        {
+          path: 'ani3',
+          name: 'Ani3',
+          component: () => import('/@/views/css/wordcloud/ani3/index.vue'),
+          meta: {
+            title: t('routes.css.ani3'),
+          },
+        },
+        {
+          path: 'ani4',
+          name: 'Ani4',
+          component: () => import('/@/views/css/wordcloud/ani4/index.vue'),
+          meta: {
+            title: t('routes.css.ani4'),
+          },
+        },
+        {
+          path: 'ani5',
+          name: 'Ani5',
+          component: () => import('/@/views/css/wordcloud/ani5/index.vue'),
+          meta: {
+            title: t('routes.css.ani5'),
+          },
+        },
+      ],
+    },
   ],
 };
 
